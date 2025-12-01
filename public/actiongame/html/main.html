@@ -9,18 +9,10 @@
 </head>
 
 <body>
-    <h1>アクションゲーム</h1>
     <canvas id="gameCanvas" width="1000" height="700"></canvas>
 
-    <!-- JSファイルを読み込む -->
-    <!-- プレイヤーの仕様 -->
-    <script src="../js/player.js"></script>
-    <!-- 敵の仕様 -->
-    <script src="../js/enemy.js"></script>
-    <!-- 描画処理 -->
-    <script src="../js/draw.js"></script>
-    <!-- ゲーム進行管理（ゲームループやキー入力管理） -->
-    <script src="../js/main.js"></script>
+    <!-- JSはすべてモジュールとして読み込む -->
+    <script type="module" src="../js/main.js"></script>
 </body>
 
 </html>

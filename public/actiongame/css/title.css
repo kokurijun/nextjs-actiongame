@@ -1,0 +1,66 @@
+body{
+    display: flex;
+    flex-direction: column;
+}
+.NavigationMenu{
+    height: 90px;
+    text-align: center;
+    background-color: #1e90ff;
+    color: #fff;
+}
+main{
+    display: flex;
+    min-height: 100vh;
+    margin: 15px 0 30px 0;
+}
+.LeftContent{
+    flex: 1;
+    text-align: center;
+    margin-right: 15px;
+}
+.RightContent{
+    flex: 1;
+    margin-right: 15px;
+}
+
+/* button {
+    width: 10em;
+    height: 3em;
+    font-size: 1.2em;
+    margin: 10px;
+} */
+
+
+.button-1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    margin: 0 auto;
+    padding: .9em 2em;
+    border: none;
+    border-radius: 5px;
+    background-color: #2589d0;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.button-1:hover {
+    animation: anima-button-1 2s linear infinite;
+}
+
+@keyframes anima-button-1 {
+    7% {
+        transform: translateY(-15px);
+    }
+    15% {
+        transform: translateY(0);
+    }
+    20% {
+        transform: translateY(-7px);
+    }
+    25% {
+        transform: translateY(0);
+    }
+}

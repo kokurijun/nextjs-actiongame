@@ -1,25 +1,36 @@
-class Enemy {
-
-    // 敵の情報
-    constructor(x, y) {
+export class Enemy {
+    constructor(x, y, range = 100, speed = 1) {
         this.x = x;
         this.y = y;
-        this.width = 40;
-        this.height = 40;
-        this.speed = 2;
-        this.image = new Image();
-        this.image.src = "../img/キャラクター2.png";
+        this.range = range;
+        this.speed = speed;
+        this.direction = 1;
 
+        // 画像読み込み
+        this.img = new Image();
+        this.img.src = "../img/キャラクター2(仮).png";
+
+        this.width = 32;   // 適宜調整
+        this.height = 64;  // 適宜調整
+
+        this.startX = x;
     }
 
-    // 敵の移動処理
     update() {
-        this.x -= this.speed;
+        // ←→ パトロール移動
+        this.x += this.direction * this.speed;
+
+        if (this.x > this.startX + this.range) this.direction = -1;
+        if (this.x < this.startX - this.range) this.direction = 1;
     }
 
-
-    // 敵の描画処理
-    draw(ctx) {
-        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    draw(ctx, cameraX = 0) {
+        ctx.drawImage(
+            this.img,
+            this.x - cameraX,
+            this.y,
+            this.width,
+            this.height
+        );
     }
 }

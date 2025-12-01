@@ -1,52 +1,87 @@
-class Player {
+import { isCollidingWithMap } from "./collision.js";
 
-    // プレイヤーの情報
+export class Player {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.width = 40;
-        this.height = 40;
+        this.width = 32;
+        this.height = 64;
         this.speed = 5;
         this.image = new Image();
-        this.image.src = "../img/キャラクター1.png";
+        this.image.src = "../img/キャラクター1(仮).png";
         this.jump = false;
         this.jumpflg = false;
         this.fall = false;
         this.nowpoint = 0;
     }
 
-    // プレイヤーの移動処理
-    move(leftPressed, rightPressed, canvasWidth, jump) {
-        this.jump = jump;
-        if (rightPressed && this.x < canvasWidth - this.width) {    // 右キーが押されているとき
-            this.x += this.speed;
+    move(leftPressed, rightPressed, canvasWidth, jump, map) {
+        const tileSize = map.tilewidth;
+        const gravity = 5;
+
+        let nextX = this.x;
+        let nextY = this.y;
+
+        // --- 横移動 ---
+    if (rightPressed) {
+        const nextX = this.x + this.speed;
+        if (!isCollidingWithMap(map, nextX, this.y, this.width, this.height)) {
+            this.x = nextX;
         }
-        if (leftPressed && this.x > 0) {                     // 左キーが押されているとき
-            this.x -= this.speed;
-        }
-        if (this.jump && this.y > 0) {                       // ジャンプ
-            if (this.jump) {
-                this.nowpoint = this.y;
-                this.jump = false;
-                this.jumpflg = true;
-            }
-        } else if (this.jumpflg) {
-            this.y -= this.speed;                                   //5ずつ上に移動
-            if (this.jump == false && this.y < this.nowpoint - 200) {
-                this.jumpflg = false;
-                this.fall = true;
-            }
-        } else if (this.fall) {                                     // 落下
-            this.y += this.speed;                                   //5ずつ下に移動
-            if (this.fall && this.y >= this.nowpoint) {
-                this.fall = false;
-                this.y = this.nowpoint;                             // 落下後の位置を強制的に元に戻す
-            }
+    } else if (leftPressed && this.x > 0) {
+        const nextX = this.x - this.speed;
+        if (!isCollidingWithMap(map, nextX, this.y, this.width, this.height)) {
+            this.x = nextX;
         }
     }
 
-    // プレイヤーの描画処理
+    // --- ジャンプ開始 ---
+    if (jump && !this.jumpflg && !this.fall) {
+        this.jumpflg = true;
+        this.jumpPower = 28; // 初期上昇力
+    }
+
+    // --- 上昇処理 ---
+    if (this.jumpflg) {
+        const nextY = this.y - this.jumpPower;
+        if (!isCollidingWithMap(map, this.x, nextY, this.width, this.height)) {
+            this.y = nextY;
+            this.jumpPower -= 2; // 徐々に上昇力減衰
+            if (this.jumpPower <= 0) {
+                this.jumpflg = false;
+                this.fall = true;
+            }
+        } else {
+            // 天井に当たったら落下開始
+            this.jumpflg = false;
+            this.fall = true;
+        }
+    }
+
+    // --- 落下処理 ---
+    if (!this.jumpflg) {
+        const nextY = this.y + gravity;
+        if (!isCollidingWithMap(map, this.x, nextY, this.width, this.height, this)) {
+            this.y = nextY;
+            this.fall = true;
+        } else {
+            // 地面に着地
+            this.fall = false;
+
+            // タイルの上にぴったり座標を合わせる
+            while (!isCollidingWithMap(map, this.x, this.y + 1, this.width, this.height)) {
+                this.y += 1;
+            }
+        }
+    }
+}
+
     draw(ctx) {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    }
+
+    // 🔹 カメラの位置を考慮してプレイヤーを描画
+    drawWithCamera(ctx, cameraX) {
+        ctx.drawImage(this.image, this.x - cameraX, this.y, this.width, this.height);
     }
 }

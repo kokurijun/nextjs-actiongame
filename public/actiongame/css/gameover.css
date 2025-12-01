@@ -1,0 +1,45 @@
+.field {
+display: flex;
+justify-content: center;
+align-items: flex-end
+}
+
+.gameover-screen {
+  text-align: center;
+  margin-top: 10%;
+}
+
+h1 {
+    color: red;
+}
+
+.button-1 {
+    width: 250px;
+    margin: 30px;
+    padding: .9em 2em;
+    border: none;
+    border-radius: 5px;
+    background-color: #2589d0;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.button-1:hover {
+    animation: anima-button-1 2s linear infinite;
+}
+
+@keyframes anima-button-1 {
+    7% {
+        transform: translateY(-15px);
+    }
+    15% {
+        transform: translateY(0);
+    }
+    20% {
+        transform: translateY(-7px);
+    }
+    25% {
+        transform: translateY(0);
+    }
+}
