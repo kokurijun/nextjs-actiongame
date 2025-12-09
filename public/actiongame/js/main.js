@@ -176,7 +176,7 @@ function gameLoop() {
 }
 
 // --- 用意しているマップ ---
-const availableMaps = ["map1", "map2"];
+const availableMaps = ["map1", "map2", "map3"];
 
 // --- ゲーム開始 ---
 async function startGame() {
