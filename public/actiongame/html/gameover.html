@@ -12,7 +12,7 @@
     <h3>今回のクリアマップ数は</h3>
     </div>
     <div class="field">
-    <h1>〇回</h1><h3><pre>   でした。</pre></h3>
+    <h1 id="count"></h1><h3><pre>   でした。</pre></h3>
     </div>
 
     <br><br>
@@ -23,4 +23,10 @@
     </div>
   </div>
 </body>
+
+<script>
+const count = localStorage.getItem("clearCount");
+document.getElementById("count").textContent = count + "回";
+</script>
+
 </html>

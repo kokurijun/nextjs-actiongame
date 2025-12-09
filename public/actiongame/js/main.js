@@ -22,6 +22,9 @@ let jump = false;
 let cameraX = 0; // カメラの左端の位置
 const cameraSpeed = 5; // カメラの移動速度
 
+let clearCount = 0;
+localStorage.setItem("clearCount", clearCount);
+
 
 // ゲーム初期化
 function init() {
@@ -124,9 +127,8 @@ function update() {
 
     // ゲームオーバー判定
     if (player.dead) {
-        gameState = "gameover";
-        console.log("ゲームオーバー！");
-       window.location.href = "gameover.html";
+         gameState = "gameover";
+        window.location.href = "gameover.html";
 
        return;
     }
@@ -134,7 +136,9 @@ function update() {
     // ゲームクリア判定
     if (player.goal) {
         gameState = "gameclear";
-        console.log("ゲームクリア！");
+        clearCount++;
+        localStorage.setItem("clearCount", clearCount);
+        console.log("クリア回数:", clearCount);
         
         return;
     }
