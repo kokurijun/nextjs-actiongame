@@ -7,18 +7,23 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
+  const res = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password }),
+  });
 
-    if (res.ok) {
-      window.location.href = "/actiongame/html/title.html";
-    } else {
-      alert("ログイン失敗");
-    }
-  };
+  const data = await res.json();
+
+  if (res.ok) {
+    localStorage.setItem("userId", data.userId);
+    localStorage.setItem("userName", data.userName);
+
+    window.location.href = "/actiongame/html/title.html";
+  } else {
+    alert("ログイン失敗");
+  }
+};
 
   return (
     <div style={{ padding: 40 }}>

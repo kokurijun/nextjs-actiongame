@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>Game Over</title>
-<link rel="stylesheet" href="../css/gameover.css">
+  <script src="/actiongame/js/auth.js"></script>
+  <meta charset="UTF-8">
+  <title>Game Over</title>
+  <link rel="stylesheet" href="../css/gameover.css">
 </head>
 <body>
   <div class="gameover-screen">
     <h1>GAME OVER</h1>
     <div class="field">
-    <h3>今回のクリアマップ数は</h3>
+      <h3>今回のクリアマップ数は</h3>
     </div>
     <div class="field">
-    <h1 id="count"></h1><h3><pre>   でした。</pre></h3>
+      <h1 id="count"></h1><h3><pre>   でした。</pre></h3>
     </div>
 
     <br><br>
@@ -25,8 +26,34 @@
 </body>
 
 <script>
-const count = localStorage.getItem("clearCount");
-document.getElementById("count").textContent = count + "回";
+  // 今回のクリア回数表示
+  const count = Number(localStorage.getItem("clearCount"));
+  document.getElementById("count").textContent = count + "回";
+
+  // ★ スコア保存処理を追加 ★
+  async function saveScore() {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      console.warn("ユーザーIDが無いためスコアを保存できません");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/updateScore", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, score: count })
+      });
+
+      const data = await res.json();
+      console.log("スコア更新結果:", data);
+    } catch (error) {
+      console.error("スコア保存中にエラー:", error);
+    }
+  }
+
+  // GameOver画面を開いたらスコア保存
+  saveScore();
 </script>
 
 </html>

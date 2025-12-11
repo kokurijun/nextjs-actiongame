@@ -20,5 +20,9 @@ export async function POST(req: Request) {
     return new NextResponse("パスワードが違います", { status: 401 });
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({
+  ok: true,
+  userId: user.id,
+  userName: user.user_name,
+});
 }

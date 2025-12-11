@@ -30,6 +30,30 @@ main{
     margin: 10px;
 } */
 
+#logout {
+  position: absolute;
+  top:20px;
+  right: 30px;
+
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 12px 20px; 
+  font-size: 18px;
+  border-radius: 8px; 
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+#logout:hover {
+  background-color: #d32f2f;
+  transform: scale(1.05);
+}
+
+#logout:active {
+  transform: scale(0.95);
+}
 
 .button-1 {
     display: flex;
