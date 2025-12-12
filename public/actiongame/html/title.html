@@ -3,20 +3,22 @@
 
 <head>
 <script src="/actiongame/js/auth.js"></script>
+<script src="/actiongame/js/highscore.js"></script>
 <meta charset="UTF-8">
 <title>Title</title>
 <link rel="stylesheet" href="../css/title.css">
 </head>
 
 <body>
-  
-  <div id="user-info" style="position: absolute; top: 10px; left: 10px; font-size: 20px;"></div>
   <button id="logout" onclick="logout()">ログアウト</button>
   <div class="NavigationMenu">
     <h1>ActionGame</h1>
   </div>
   
   <main>
+    <div id="user-info" style="position: absolute; top: 10px; left: 10px; font-size: 20px;"></div></br>
+  <h3 id="highscore">最高スコア：読み込み中...</h3>
+
     <div class="LeftContent">
       <br><br><br><br><br>
       <h2>ゲームを始める</h2>
