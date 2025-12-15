@@ -6,29 +6,25 @@ if (!userId) {
 }
 
 // 左上にユーザー名表示
-const userName = localStorage.getItem("userName");
-
-// HTML に user-info がある場合のみ表示
 document.addEventListener("DOMContentLoaded", () => {
+  const username = localStorage.getItem("username");
   const userInfoBox = document.getElementById("user-info");
 
   if (userInfoBox) {
-    // ユーザー名が取得できなくても「ユーザー名：」は表示される
-    userInfoBox.textContent = `ユーザー名：${userName || ""}`;
-    console.log("ユーザー名を表示しました:", userName);
+    userInfoBox.textContent = `ユーザー名：${username || ""}`;
   } else {
     console.log("user-info が HTML に見つかりません");
   }
 });
 
-//ログアウト処理
+// ログアウト処理
 function logout() {
   localStorage.removeItem("userId");
-  localStorage.removeItem("userName");
+  localStorage.removeItem("username");
 
   alert("ログアウトしました");
   window.location.href = "/";
 }
 
-// 他のスクリプトやHTMLから使えるようにする
+// グローバル公開
 window.logout = logout;

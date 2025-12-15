@@ -8,7 +8,7 @@ async function loadHighScore() {
   }
 
   try {
-    const apiURL = `${window.location.origin}/api/getScore`; // ← 重要！
+    const apiURL = `${window.location.origin}/api/getScore`;
 
     const res = await fetch(apiURL, {
       method: "POST",

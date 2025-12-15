@@ -7,16 +7,30 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (res.ok) {
+      if (!res.ok) {
+        alert("ログインに失敗しました");
+        return;
+      }
+
+      // ログイン成功時のデータを取得
+      const data = await res.json();
+
+      // auth.js が使う値を保存
+      localStorage.setItem("userId", data.userId);
+      localStorage.setItem("username", data.userName);
+
+      // タイトル画面へ遷移
       window.location.href = "/actiongame/html/title.html";
-    } else {
-      alert("ログインに失敗しました");
+    } catch (err) {
+      console.error("ログインエラー:", err);
+      alert("通信エラーが発生しました");
     }
   };
 
@@ -40,10 +54,10 @@ export default function LoginPage() {
           position: "relative",
         }}
       >
-        {/* 🔵 ヘッダー部分 */}
+        {/* ヘッダー */}
         <div
           style={{
-            width: "calc(100% + 56px)", // 左右 padding 分広げる
+            width: "calc(100% + 56px)",
             marginLeft: "-28px",
             marginRight: "-28px",
             marginTop: "-28px",
@@ -60,7 +74,7 @@ export default function LoginPage() {
           ログイン
         </div>
 
-        {/* 🔲 入力フォーム */}
+        {/* ユーザー名 */}
         <input
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -75,6 +89,7 @@ export default function LoginPage() {
           }}
         />
 
+        {/* パスワード */}
         <input
           type="password"
           value={password}
@@ -90,7 +105,7 @@ export default function LoginPage() {
           }}
         />
 
-        {/* 🔵 ログインボタン */}
+        {/* ログインボタン */}
         <button
           onClick={handleLogin}
           style={{
@@ -108,6 +123,7 @@ export default function LoginPage() {
           ログイン
         </button>
 
+        {/* 新規登録 */}
         <p style={{ marginTop: "20px", textAlign: "center" }}>
           <a
             href="/register"
