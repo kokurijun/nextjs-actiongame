@@ -1,19 +1,34 @@
+export const enemyTypes = {
+    slime: { name: "スライム", hp: 20, maxHp: 20, attack: 5, img: "../img/キャラクター2(仮).png" },
+    orc: { name: "オーク", hp: 40, maxHp: 40, attack: 10, img: "../img/キャラクター2(仮).png" },
+    dragon: { name: "ドラゴン", hp: 100, maxHp: 100, attack: 20, img: "../img/キャラクター2(仮).png" }
+};
+
 export class Enemy {
-    constructor(x, y, range = 100, speed = 1) {
+    constructor(x, y, range = 100, speed = 0.5, type = "slime") {
         this.x = x;
         this.y = y;
         this.range = range;
         this.speed = speed;
         this.direction = 1;
+        this.type = type;
+
+        const data = enemyTypes[type] || enemyTypes["slime"];
 
         // 画像読み込み
         this.img = new Image();
-        this.img.src = "../img/キャラクター2(仮).png";
+        this.img.src = data.img;
 
         this.width = 32;   // 適宜調整
         this.height = 64;  // 適宜調整
 
         this.startX = x;
+
+        // バトル用パラメータ
+        this.maxHp = data.maxHp;
+        this.hp = data.hp;
+        this.attack = data.attack;
+        this.name = data.name;
     }
 
     update() {

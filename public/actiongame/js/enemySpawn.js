@@ -1,14 +1,14 @@
 // マップごとの敵配置データ
 export const enemySpawnData = {
     map1: [
-        { x: 200, y: 512, range: 120, speed: 2 },
-        { x: 2315, y: 512, range: 64, speed: 2 }
+        { x: 200, y: 512, range: 120, speed: 1, type: "slime" },
+        { x: 2315, y: 512, range: 64, speed: 1, type: "slime" }
     ],
     map2: [
-        { x: 400, y: 512, range: 200, speed: 1 },
-        { x: 1860, y: 64, range: 75, speed: 1 },
-        { x: 3120, y: 448, range: 200, speed: 2 },
-        { x: 4700, y: 448, range: 105, speed: 1 }
+        { x: 400, y: 512, range: 200, speed: 1, type: "slime" },
+        { x: 1860, y: 64, range: 75, speed: 1, type: "orc" },
+        { x: 3120, y: 448, range: 200, speed: 1, type: "orc" },
+        { x: 4700, y: 448, range: 105, speed: 1, type: "orc" }
     ]
 };
 
@@ -20,6 +20,6 @@ export function spawnEnemiesForMap(mapName, enemiesArray) {
 
     const data = enemySpawnData[mapName] || [];
     for (const e of data) {
-        enemiesArray.push(new Enemy(e.x, e.y, e.range, e.speed));
+        enemiesArray.push(new Enemy(e.x, e.y, e.range, e.speed, e.type));
     }
 }

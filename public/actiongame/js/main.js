@@ -5,6 +5,7 @@ import { spawnEnemiesForMap } from "./enemySpawn.js";
 import { isHit } from './collision.js';
 
 import { Enemy } from './enemy.js';
+import { startBattle, updateBattle, onBattleClick } from './battle.js';
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -29,10 +30,18 @@ localStorage.setItem("clearCount", clearCount);
 // ゲーム初期化
 function init() {
     player.x = 100;
-    player.y = canvas.height - 188;
+    player.y = canvas.height - 88;
     player.jumpflg = false;
     player.fall = false;
     player.nowpoint = 0;
+
+    // バトルステータス初期化 (undefined対策でデフォルト値も設定)
+    player.maxHp = player.maxHp || 100;
+    player.hp = player.maxHp;
+    player.maxMp = player.maxMp || 20;
+    player.mp = player.maxMp;
+    player.invincible = false;
+    player.invincibleTime = 0;
 
     enemies.length = 0;
     rightPressed = false;
@@ -61,6 +70,20 @@ document.addEventListener("keyup", (e) => {
 
 // GameOver, GameClear時のマウスクリック
 canvas.addEventListener("click", (e) => {
+    // バトル中のクリック
+    if (gameState === "battle") {
+        onBattleClick(e, canvas, player, enemies, (newState) => {
+            gameState = newState;
+            // バトル終了時にキー入力をリセット
+            if (newState === "play") {
+                rightPressed = false;
+                leftPressed = false;
+                jump = false;
+            }
+        });
+        return;
+    }
+
     if (gameState !== "gameclear") return;
 
     const rect = canvas.getBoundingClientRect();
@@ -90,7 +113,7 @@ async function restartGame() {
 
     // 🔽 プレイヤー初期化
     player.x = 100;
-    player.y = canvas.height - 188;
+    player.y = canvas.height - 88;
     player.dead = false;
     player.goal = false;
     player.jumpflg = false;
@@ -116,6 +139,14 @@ let gameState = "play";
 
 // ゲーム更新
 function update() {
+    // 無敵時間の更新
+    if (player.invincibleTime > 0) {
+        player.invincibleTime--;
+        player.invincible = true;
+    } else {
+        player.invincible = false;
+    }
+
     // ゲームオーバー時は動作停止
     if (gameState !== "play") return;
 
@@ -127,10 +158,10 @@ function update() {
 
     // ゲームオーバー判定
     if (player.dead) {
-         gameState = "gameover";
+        gameState = "gameover";
         window.location.href = "gameover.html";
 
-       return;
+        return;
     }
 
     // ゲームクリア判定
@@ -139,7 +170,7 @@ function update() {
         clearCount++;
         localStorage.setItem("clearCount", clearCount);
         console.log("クリア回数:", clearCount);
-        
+
         return;
     }
 
@@ -149,9 +180,9 @@ function update() {
     // マップの端では止める
     const mapPixelWidth = currentMap.width * currentMap.tilewidth;
     if (cameraX < 0) cameraX = 0;
-    
-        console.log("キャラクター位置_x:", player.x);
-        console.log("キャラクター位置_y:", player.y);
+
+    console.log("キャラクター位置_x:", player.x);
+    console.log("キャラクター位置_y:", player.y);
     if (cameraX > mapPixelWidth - canvas.width) {
         cameraX = mapPixelWidth - canvas.width;
     }
@@ -162,18 +193,25 @@ function update() {
 
         // --- プレイヤーと敵の当たり判定 ---
         if (isHit(player, enemies[i])) {
-            player.dead = true;
-            console.log("敵に当たった！ゲームオーバー");
+            // 無敵時間中はバトルしない
+            if (player.invincible) continue;
+
+            startBattle(enemies[i], (newState) => gameState = newState, player);
         }
     }
 }
 
 // ゲームループ
 function gameLoop() {
-    update();
+    if (gameState === "battle") {
+        updateBattle(player, (newState) => gameState = newState);
+    } else {
+        update();
+    }
     draw(ctx, player, enemies, gameState);
     requestAnimationFrame(gameLoop);
 }
+
 
 // --- 用意しているマップ ---
 const availableMaps = ["map1", "map2", "map3"];
