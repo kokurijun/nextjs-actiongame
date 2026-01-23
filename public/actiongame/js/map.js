@@ -62,6 +62,12 @@ export function drawMap(ctx, map, cameraX = 0) {
     tileImages[13].src = "../img/map_ice_renga.png";
     tileImages[14] = new Image();
     tileImages[14].src = "../img/map_ice_block.png";
+    tileImages[15] = new Image();
+    tileImages[15].src = "../img/map_poison1.png";
+    tileImages[16] = new Image();
+    tileImages[16].src = "../img/map_poison2.png";
+    tileImages[17] = new Image();
+    tileImages[17].src = "../img/map_needle.png";
 
     // 描画
     for (let y = 0; y < map.height; y++) {

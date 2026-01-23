@@ -33,7 +33,7 @@ export function isCollidingWithMap(map, x, y, width, height, player = null) {
                 }
 
                 // --- ゲームオーバーブロック（落下トラップなど） ---
-                if (tile == 99 && player) {
+                if ((tile == 15 || tile == 16 || tile == 17 || tile == 99) && player) {
                     console.log("💀 プレイヤーがタイル99に当たりました。ゲームオーバー！");
                     player.dead = true; // プレイヤーに死亡フラグを立てる
                 }
