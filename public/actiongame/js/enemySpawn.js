@@ -12,8 +12,8 @@ export const enemySpawnData = {
     ],
     map4: [
         { x: 3660, y: 320, range: 200, speed: 1, type: "slime" },
-        { x: 5065, y: 512, range: 200, speed: 1, type: "orc" },
-        { x: 7530, y: 192, range: 75, speed: 1, type: "orc" }
+        { x: 5065, y: 512, range: 75, speed: 1, type: "orc" },
+        { x: 7533, y: 192, range: 42, speed: 1, type: "orc" }
     ]
 };
 
