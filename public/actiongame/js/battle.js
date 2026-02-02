@@ -190,11 +190,18 @@ export function onBattleClick(e, canvas, player, enemies, setGameState) {
 
     // --- にげる ---
     else if (isClicked(startX + 110, startY + 50)) {
-        addLog("うまく逃げ切れた！");
-        battleState.turn = "none";
-        setTimeout(() => {
-            endBattle(false, enemies, setGameState);
-        }, 1000);
+        if (Math.random() < 0.7) {
+            // 成功（70%）
+            addLog("うまく逃げ切れた！");
+            battleState.turn = "none";
+            setTimeout(() => {
+                endBattle(false, enemies, setGameState);
+            }, 1000);
+        } else {
+            // 失敗（30%）
+            addLog("逃げられなかった！");
+            battleState.turn = "enemy";
+        }
     }
 }
 
