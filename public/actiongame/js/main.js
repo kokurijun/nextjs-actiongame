@@ -1,4 +1,5 @@
 import { draw, setMap, getCurrentMap } from './draw.js';
+import { progression } from './progression.js'; // 🔹 追加
 import { loadMap } from './map.js';
 import { Player } from './player.js';
 import { spawnEnemiesForMap } from "./enemySpawn.js";
@@ -19,12 +20,13 @@ let rightPressed = false;
 let leftPressed = false;
 let jump = false;
 
-// カメラの変数
-let cameraX = 0; // カメラの左端の位置
-const cameraSpeed = 5; // カメラの移動速度
+// camera variables
+let cameraX = 0;
+const cameraSpeed = 5;
 
-let clearCount = 0;
-localStorage.setItem("clearCount", clearCount);
+// clearCount is now managed by progression.js
+// let clearCount = 0;
+// localStorage.setItem("clearCount", clearCount);
 
 
 // ゲーム初期化
@@ -35,10 +37,13 @@ function init() {
     player.fall = false;
     player.nowpoint = 0;
 
-    // バトルステータス初期化 (undefined対策でデフォルト値も設定)
-    player.maxHp = player.maxHp || 100;
+    // 🔽 progressionからステータスを適用
+    progression.init();
+    player.maxHp = progression.data.maxHp;
+    player.maxMp = progression.data.maxMp;
+    player.attack = progression.data.attack;
+
     player.hp = player.maxHp;
-    player.maxMp = player.maxMp || 20;
     player.mp = player.maxMp;
     player.invincible = false;
     player.invincibleTime = 0;
@@ -159,6 +164,7 @@ function update() {
     // ゲームオーバー判定
     if (player.dead) {
         gameState = "gameover";
+        progression.reset(); // 🔹 ゲームオーバー時にリセット
         window.location.href = "gameover.html";
 
         return;
@@ -167,9 +173,8 @@ function update() {
     // ゲームクリア判定
     if (player.goal) {
         gameState = "gameclear";
-        clearCount++;
-        localStorage.setItem("clearCount", clearCount);
-        console.log("クリア回数:", clearCount);
+        progression.addClearCount(); // 🔹 クリア回数加算
+        console.log("クリア！ 総クリア回数:", progression.data.totalClears);
 
         return;
     }
@@ -214,7 +219,7 @@ function gameLoop() {
 
 
 // --- 用意しているマップ ---
-const availableMaps = ["map1", "map2", "map3","map4"];
+const availableMaps = ["map1", "map2", "map3", "map4"];
 
 // --- ゲーム開始 ---
 async function startGame() {

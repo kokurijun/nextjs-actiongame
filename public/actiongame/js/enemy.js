@@ -1,11 +1,11 @@
 export const enemyTypes = {
-    slime: { name: "スライム", hp: 20, maxHp: 20, attack: 5, img: "../img/キャラクター2(仮).png" },
-    orc: { name: "オーク", hp: 40, maxHp: 40, attack: 10, img: "../img/キャラクター2(仮).png" },
-    dragon: { name: "ドラゴン", hp: 100, maxHp: 100, attack: 20, img: "../img/キャラクター2(仮).png" }
+    slime: { name: "スライム", hp: 20, maxHp: 20, attack: 5, exp: 10, img: "../img/キャラクター2(仮).png" },
+    orc: { name: "オーク", hp: 40, maxHp: 40, attack: 10, exp: 35, img: "../img/キャラクター2(仮).png" },
+    dragon: { name: "ドラゴン", hp: 100, maxHp: 100, attack: 20, exp: 100, img: "../img/キャラクター2(仮).png" }
 };
 
 export class Enemy {
-    constructor(x, y, range = 100, speed = 0.5, type = "slime") {
+    constructor(x, y, range = 100, speed = 0.5, type = "slime", multiplier = 1) {
         this.x = x;
         this.y = y;
         this.range = range;
@@ -25,9 +25,9 @@ export class Enemy {
         this.startX = x;
 
         // バトル用パラメータ
-        this.maxHp = data.maxHp;
-        this.hp = data.hp;
-        this.attack = data.attack;
+        this.maxHp = Math.floor(data.maxHp * multiplier);
+        this.hp = this.maxHp;
+        this.attack = Math.floor(data.attack * multiplier);
         this.name = data.name;
     }
 

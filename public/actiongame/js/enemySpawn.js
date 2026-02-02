@@ -9,17 +9,24 @@ export const enemySpawnData = {
         { x: 1860, y: 64, range: 75, speed: 1, type: "orc" },
         { x: 3120, y: 448, range: 200, speed: 1, type: "orc" },
         { x: 4700, y: 448, range: 105, speed: 1, type: "orc" }
+    ],
+    map4: [
+        { x: 3660, y: 320, range: 200, speed: 1, type: "slime" },
+        { x: 5065, y: 512, range: 200, speed: 1, type: "orc" },
+        { x: 7530, y: 192, range: 75, speed: 1, type: "orc" }
     ]
 };
 
 // マップに応じて敵を生成する関数
 import { Enemy } from "./enemy.js";
+import { progression } from "./progression.js";
 
 export function spawnEnemiesForMap(mapName, enemiesArray) {
     enemiesArray.length = 0; // 一旦クリア
 
     const data = enemySpawnData[mapName] || [];
+    const multiplier = progression.getEnemyDifficultyMultiplier();
     for (const e of data) {
-        enemiesArray.push(new Enemy(e.x, e.y, e.range, e.speed, e.type));
+        enemiesArray.push(new Enemy(e.x, e.y, e.range, e.speed, e.type, multiplier));
     }
 }

@@ -1,3 +1,6 @@
+import { progression } from "./progression.js";
+import { enemyTypes } from "./enemy.js";
+
 export let battleState = null;
 
 export function getBattleState() {
@@ -108,6 +111,7 @@ function executeEnemyTurn(player, setGameState) {
 
         setTimeout(() => {
             setGameState("gameover");
+            progression.reset(); // 🔹 ゲームオーバー時にリセット
             window.location.href = "gameover.html";
         }, 2000);
         return;
@@ -200,10 +204,28 @@ function checkBattleEnd(enemies, setGameState) {
     if (battleState.enemy.hp <= 0) {
         battleState.enemy.hp = 0;
         addLog(`${battleState.enemy.name} を倒した！`);
+
+        // XP処理
+        const type = battleState.enemy.type;
+        const exp = enemyTypes[type] ? (enemyTypes[type].exp || 10) : 10;
+        const result = progression.gainExp(exp);
+        addLog(`${exp} の経験値を獲得！`);
+
+        if (result.leveledUp) {
+            addLog(result.logMessage);
+            // プレイヤーのステータス更新
+            battleState.player.maxHp = progression.data.maxHp;
+            battleState.player.maxMp = progression.data.maxMp;
+            battleState.player.attack = progression.data.attack;
+            // レベルアップで全回復
+            battleState.player.hp = battleState.player.maxHp;
+            battleState.player.mp = battleState.player.maxMp;
+        }
+
         battleState.actionWait = 100;
         setTimeout(() => {
             endBattle(true, enemies, setGameState);
-        }, 1000);
+        }, 2500); // ログを読むために少し時間を延ばす
     } else {
         battleState.turn = "enemy";
     }
