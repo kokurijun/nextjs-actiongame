@@ -24,7 +24,7 @@ export function isCollidingWithMap(map, x, y, width, height, player = null) {
 
                 const collisionTiles = [
                     1, 2, 3, 4,  // 地面
-                     9, 10, 11, 12, 13, 14  // 別の地形
+                    9, 10, 11, 12, 13, 14  // 別の地形
                 ];
 
                 // --- 衝突ブロック（地面） ---
@@ -33,9 +33,30 @@ export function isCollidingWithMap(map, x, y, width, height, player = null) {
                 }
 
                 // --- ゲームオーバーブロック（落下トラップなど） ---
-                if ((tile == 15 || tile == 16 || tile == 17 || tile == 99) && player) {
-                    console.log("💀 プレイヤーがタイル99に当たりました。ゲームオーバー！");
-                    player.dead = true; // プレイヤーに死亡フラグを立てる
+                // タイル15: タイルの下半分とプレイヤーの下半分が重なったらゲームオーバー
+                if (tile == 15 && player) {
+                    const playerBottomHalf = {
+                        x: x,
+                        y: y + height * 0.5, // プレイヤーの下半分
+                        width: width,
+                        height: height * 0.5 // プレイヤーの高さの半分
+                    };
+                    const tileBottomHalf = {
+                        x: tx * tileSize,
+                        y: ty * tileSize + tileSize * 0.5, // タイルの下半分
+                        width: tileSize,
+                        height: tileSize * 0.5  // タイルの高さの半分
+                    };
+
+                    if (isHit(playerBottomHalf, tileBottomHalf)) {
+                        console.log("💀 プレイヤーがタイル15の深層部に当たりました。ゲームオーバー！");
+                        player.dead = true;
+                    }
+                }
+                // その他の罠: 触れたら即アウト
+                else if ((tile == 16 || tile == 17 || tile == 99) && player) {
+                    console.log("💀 プレイヤーが危険なタイルに当たりました。ゲームオーバー！");
+                    player.dead = true;
                 }
 
                 // --- ゴールブロック ---
