@@ -164,6 +164,8 @@ function update() {
     // ゲームオーバー判定
     if (player.dead) {
         gameState = "gameover";
+        // 🔹 ゲームオーバー画面で表示するためにクリア回数を保存
+        localStorage.setItem("clearCount", progression.data.totalClears);
         progression.reset(); // 🔹 ゲームオーバー時にリセット
         window.location.href = "gameover.html";
 
